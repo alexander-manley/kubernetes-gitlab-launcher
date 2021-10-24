@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubernetes-gitlab-launcher
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kubernetes-gitlab-launcher
+  template:
+    metadata:
+      labels:
+        app: kubernetes-gitlab-launcher
+    spec:
+      containers:
+      - image: gitlab/gitlab-ce
+        name: kubernetes-gitlab-launcher
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubernetes-gitlab-launcher
+  annotations:
+    dev.okteto.com/auto-ingress: "true"
+spec:
+  type: ClusterIP  
+  ports:
+  - name: "kubernetes-gitlab-launcher"
+    port: 80
+  selector:
+    app: kubernetes-gitlab-launcher
